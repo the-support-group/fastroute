@@ -7,25 +7,47 @@ use Air\HTTP\Request\RequestInterface;
 use FastRoute\RouteCollector;
 use FastRoute\Dispatcher;
 use Air\Routing\ResolvedRequest\ResolvedRequest;
+use Air\Routing\ResolvedRequest\ResolvedRequestInterface;
 use Exception;
 use OutOfRangeException;
 
 class FastRoute extends Router
 {
+    /**
+     * @param RequestInterface $request A request.
+     * @return ResolvedRequestInterface
+     * @throws Exception
+     */
     public function route(RequestInterface $request)
     {
-        // Add routes to the route collector.
-        $dispatcher = \FastRoute\simpleDispatcher(
-            function (RouteCollector $collector) {
-                foreach ($this->routes as $route) {
-                    $collector->addRoute(
-                        $route->getRequestType(),
-                        $route->getUri(),
-                        serialize($route)
-                    );
+        if (!is_null($this->cachePath)) {
+            $dispatcher = \FastRoute\cachedDispatcher(
+                function(RouteCollector $collector) {
+                    foreach ($this->routes as $route) {
+                        $collector->addRoute(
+                            $route->getRequestType(),
+                            $route->getUri(),
+                            serialize($route)
+                        );
+                    }
+                }, [
+                    'cacheFile' => $this->cachePath
+                ]
+            );
+        } else {
+            // Add routes to the route collector.
+            $dispatcher = \FastRoute\simpleDispatcher(
+                function (RouteCollector $collector) {
+                    foreach ($this->routes as $route) {
+                        $collector->addRoute(
+                            $route->getRequestType(),
+                            $route->getUri(),
+                            serialize($route)
+                        );
+                    }
                 }
-            }
-        );
+            );
+        }
 
         // Dispatch the route.
         $route_info = $dispatcher->dispatch($request->getMethod(), $request->getUriPath());
