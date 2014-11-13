@@ -16,6 +16,7 @@ class FastRoute extends Router
     /**
      * @param RequestInterface $request A request.
      * @return ResolvedRequestInterface
+     * @throws OutOfRangeException
      * @throws Exception
      */
     public function route(RequestInterface $request)
