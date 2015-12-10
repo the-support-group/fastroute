@@ -1,6 +1,5 @@
 {
     "name": "air-php/fastroute",
-    "version": "0.1",
     "type": "library",
     "description": "A FastRoute implementation of a router.",
     "require": {
