@@ -1,11 +1,10 @@
 {
     "name": "air-php/fastroute",
-    "version": "0.1",
     "type": "library",
     "description": "A FastRoute implementation of a router.",
     "require": {
         "php": ">=5.5.0",
-        "phpunit/phpunit": "~4.1",
+        "phpunit/phpunit": "~5.0",
         "air-php/routing": "~0.1",
         "nikic/fast-route": "~0.2"
     },
